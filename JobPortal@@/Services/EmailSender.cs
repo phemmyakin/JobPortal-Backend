@@ -23,7 +23,7 @@ namespace JobPortal__.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("oakinnigbagbe@eminenttechnology.com", "Email Confirmation"),
+                From = new EmailAddress("oakinnigbagbe@eminenttechnology.com", "Job Portal"),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message

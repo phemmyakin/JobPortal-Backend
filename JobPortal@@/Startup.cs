@@ -41,18 +41,16 @@ namespace JobPortal__
             });
             services.AddCors();
 
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
-            services.AddMvc()
-                .AddRazorPagesOptions(options =>
-                {
-                    options.Conventions.AuthorizeFolder("/Account/Manage");
-                    options.Conventions.AuthorizePage("/Account/Logout");
-                });
+            services.AddMvc();
+                
+
 
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +68,7 @@ namespace JobPortal__
             }
 
             app.UseStaticFiles();
+
 
             app.UseAuthentication();
             app.UseSwagger();
