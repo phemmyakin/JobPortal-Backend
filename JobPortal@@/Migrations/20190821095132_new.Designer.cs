@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace JobPortal__.Data.Migrations
+namespace JobPortal2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190816094334_first")]
-    partial class first
+    [Migration("20190821095132_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,7 +74,7 @@ namespace JobPortal__.Data.Migrations
 
             modelBuilder.Entity("JobPortal2.Model.Employee", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
@@ -101,13 +101,13 @@ namespace JobPortal__.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<int>("EmployeeId");
-
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Gender");
 
                     b.Property<string>("HighestQualification");
+
+                    b.Property<string>("Id");
 
                     b.Property<string>("LastName");
 
@@ -137,9 +137,55 @@ namespace JobPortal__.Data.Migrations
 
                     b.Property<string>("YearsOfExperience");
 
-                    b.HasKey("Id");
+                    b.HasKey("EmployeeId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.Employer", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("CompanyName");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("Id");
+
+                    b.Property<string>("JobDescription");
+
+                    b.Property<string>("JobTitle");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("CompanyId");
+
+                    b.ToTable("Employers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

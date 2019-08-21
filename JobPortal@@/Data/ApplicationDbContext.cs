@@ -24,5 +24,7 @@ namespace JobPortal__.Data
         }
 
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Employer> Employers { get; set; }
+
     }
 }

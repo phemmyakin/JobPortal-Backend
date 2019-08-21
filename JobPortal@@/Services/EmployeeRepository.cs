@@ -40,8 +40,6 @@ namespace JobPortal2.Services
             if (user == null)
                 throw new Exception("User not found");
 
-
-
             // update user properties
             user.FirstName = employee.FirstName;
             user.LastName = employee.LastName;

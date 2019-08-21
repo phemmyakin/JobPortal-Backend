@@ -43,12 +43,10 @@ namespace JobPortal__
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+            services.AddTransient<IEmployerRepository, EmployerRepository>();
 
             services.AddMvc();
                 
-
-
-            // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
            
         }

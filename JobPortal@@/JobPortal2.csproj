@@ -4,6 +4,12 @@
     <UserSecretsId>aspnet-JobPortal__-01BAA784-9F68-4843-B285-7FB0D9615A8C</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20190816094334_first.cs" />
+    <Compile Remove="Data\Migrations\20190816094334_first.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190819175911_second.cs" />
+    <Compile Remove="Data\Migrations\20190819175911_second.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />

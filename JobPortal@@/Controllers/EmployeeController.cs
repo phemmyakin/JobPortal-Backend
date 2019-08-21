@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace JobPortal2.Controllers
 {
-    [Authorize]
+  // [Authorize]
     [Route("api/[controller]")]
-   // [ApiController]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -25,6 +24,8 @@ namespace JobPortal2.Controllers
         public IActionResult GetEmployees()
         {
             var employees = _employeeRepository.GetEmployees();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             return Ok(employees);
         }
 
@@ -34,28 +35,29 @@ namespace JobPortal2.Controllers
         public IActionResult GetEmployee(int employeeId)
         {
             var employee = _employeeRepository.GetEmployee(employeeId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             if (employee == null)
                 return NotFound();
+            
             return Ok(employee);
         }
 
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{employeeId}")]
         public IActionResult Update(int id, [FromBody]Employee employee)
         {
-        
-            try
-            {
-              
-                _employeeRepository.UpdateEmployee(employee);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+
+            if (employee == null)
+                return BadRequest(ModelState);
+            if (id != employee.EmployeeId)
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            _employeeRepository.UpdateEmployee(employee);
+                return NoContent();
+          
         }
 
 
@@ -63,15 +65,22 @@ namespace JobPortal2.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Employee employee)
         {
-            //var employee = _mapper.Map<Employee>(employeeDto);
-            if (employee == null)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
+                //var employee = _mapper.Map<Employee>(employeeDto);
+                if (employee == null)
+                {
+                    ModelState.AddModelError("", "Employee cannot be empty");
+                    return BadRequest(ModelState);
+                }
+
+                _employeeRepository.CreateEmployee(employee);
+
+                return StatusCode(201);
+
+               // return CreatedAtRoute("GetEmployee", new { employeeId = employee.Id }, employee);
             }
-
-            _employeeRepository.CreateEmployee(employee);
-
-            return CreatedAtRoute("GetEmployee", new { id = employee.EmployeeId }, employee);
+            return BadRequest(ModelState);
         }
 
     }
