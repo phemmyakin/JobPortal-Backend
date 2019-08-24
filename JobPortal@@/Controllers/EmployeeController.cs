@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal2.Controllers
 {
-  // [Authorize]
+   [Authorize]
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
@@ -61,7 +61,7 @@ namespace JobPortal2.Controllers
         }
 
 
-
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Create([FromBody] Employee employee)
         {

@@ -11,8 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using JobPortal__.Data;
 using JobPortal__.Services;
-using Microsoft.OpenApi.Models;
 using JobPortal2.Services;
+using JobPortal2.Model;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using JobPortal2.Extension;
 
 namespace JobPortal__
 {
@@ -35,10 +39,12 @@ namespace JobPortal__
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Job Portal", Version = "v1" });
-            });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Job Portal", Version = "v1" });
+            //});
+
+           services.AddSwaggerDocumentation();
             services.AddCors();
 
             services.AddTransient<IEmailSender, EmailSender>();
@@ -46,13 +52,50 @@ namespace JobPortal__
             services.AddTransient<IEmployerRepository, EmployerRepository>();
 
             services.AddMvc();
-                
-            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-           
-        }
+            services.AddAuthentication(cfg =>
+            {
+                cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddCookie(cfg => cfg.SlidingExpiration = true)
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = MVSToken.Issuer,
+                        ValidAudience = MVSToken.Audience,
+                        IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(MVSToken.Key))
+                    };
+                });
+
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = true;
+                //options.SignIn.RequireConfirmedEmail = true;
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+            });
+
+
+                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+
+            }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -69,12 +112,13 @@ namespace JobPortal__
 
 
             app.UseAuthentication();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Job Portal V1");
+            app.UseSwaggerDocumentation();
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Job Portal V1");
 
-            });
+            //});
             app.UseCors(x => x
                .AllowAnyOrigin()
                .AllowAnyMethod()

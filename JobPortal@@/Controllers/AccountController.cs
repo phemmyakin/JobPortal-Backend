@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 using JobPortal2.Model;
 using JobPortal__.Services;
 using JobPortal__.Pages.Account;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JobPortal__.Controllers
 {
@@ -62,34 +66,34 @@ namespace JobPortal__.Controllers
 
 
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(LogInViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-                     return Ok();
-                }
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Login(LogInViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // This doesn't count login failures towards account lockout
+        //        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        //        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+        //        if (result.Succeeded)
+        //        {
+        //            _logger.LogInformation("User logged in.");
+        //             return Ok();
+        //        }
                
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToAction(nameof(Login));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return BadRequest(ModelState);
-                }
-            }
-            return Ok(model);
-        }
+        //        if (result.IsLockedOut)
+        //        {
+        //            _logger.LogWarning("User account locked out.");
+        //            return RedirectToAction(nameof(Login));
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    return Ok(model);
+        //}
 
 
         [HttpPost]
@@ -140,5 +144,64 @@ namespace JobPortal__.Controllers
             return Ok (result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] JwtTokenViewModel jwtmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = await _userManager.FindByNameAsync(jwtmodel.Username);
+                var signInResult = await _signInManager.CheckPasswordSignInAsync(user, jwtmodel.Password, false);
+                if (signInResult.Succeeded)
+                {
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(MVSToken.Key));
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var claims = new[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, jwtmodel.Username),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.UniqueName, jwtmodel.Username),
+                       
+                    };
+
+                    var token = new JwtSecurityToken(
+
+                        MVSToken.Issuer,
+                        MVSToken.Audience,
+                        claims,
+                        expires: DateTime.UtcNow.AddMinutes(30),
+                        signingCredentials: creds
+                        );
+
+                    var results = new
+                    {
+                        
+                        token = new JwtSecurityTokenHandler().WriteToken(token),
+                        expiration = token.ValidTo,
+                        user.Email,
+                        user.UserName,
+                        user.Id,
+                        user.PhoneNumber
+                       
+
+                    };
+                    return Ok(results);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
+
+
+
+
+
     }
+
 }
