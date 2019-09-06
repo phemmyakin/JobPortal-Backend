@@ -29,14 +29,14 @@ namespace JobPortal__.Controllers
         private readonly IEmployerRepository _employerRepository;
         private readonly ApplicationDbContext _dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, ILogger<AccountController> logger, IEmailSender emailSender, IEmployerRepository employerRepository)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,  ILogger<AccountController> logger, IEmailSender emailSender, IEmployerRepository employerRepository)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
             _emailSender = emailSender;
             _employerRepository = employerRepository;
-            _dbContext = dbContext;
+            
 
         }
 
