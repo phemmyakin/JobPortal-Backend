@@ -13,6 +13,7 @@ namespace JobPortal__.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            //Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

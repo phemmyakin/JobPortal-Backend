@@ -33,6 +33,7 @@ namespace JobPortal2.Services
             return _context.Employers.ToList();
         }
 
+        
         public void UpdateEmployer(Employer employer)
         {
             var user = _context.Employers.Find(employer.CompanyId);
@@ -46,6 +47,11 @@ namespace JobPortal2.Services
             _context.Employers.Update(user);
             _context.SaveChanges();
 
+        }
+
+        public bool EmployerExists(int employerId)
+        {
+            return _context.Employers.Any(b => b.CompanyId== employerId);
         }
     }
 }

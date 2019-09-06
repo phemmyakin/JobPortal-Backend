@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal2.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     public class EmployerController : ControllerBase
     {
@@ -20,6 +20,7 @@ namespace JobPortal2.Controllers
             _employerRepository = employerRepository;
         }
 
+        [Authorize(Roles = "Admin, JobSeeker")]
         [HttpGet]
         public IActionResult GetEmployers()
         {
@@ -30,6 +31,7 @@ namespace JobPortal2.Controllers
 
         }
 
+        [Authorize(Roles = "Admin, JobSeeker")]
         [HttpGet("employerId")]
         public IActionResult GetEmployer(int employerId)
         {
@@ -41,7 +43,7 @@ namespace JobPortal2.Controllers
             return Ok(employer);
         }
 
-
+        [Authorize(Roles = "Admin, Company")]
         [HttpPut("employerid")]
         public IActionResult Update(int Id, [FromBody] Employer employer)
         {
@@ -60,7 +62,7 @@ namespace JobPortal2.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin, Company")]
         [HttpPost]
         public IActionResult Create([FromBody] Employer employer)
         {

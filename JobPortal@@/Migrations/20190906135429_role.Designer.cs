@@ -11,9 +11,10 @@ using System;
 namespace JobPortal2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190906135429_role")]
+    partial class role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,6 +189,26 @@ namespace JobPortal2.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Employers");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.RegisterViewModel", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Role")
+                        .IsRequired();
+
+                    b.HasKey("Email");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

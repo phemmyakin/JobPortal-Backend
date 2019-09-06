@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using JobPortal2.Extension;
+using Microsoft.Extensions.Logging;
 
 namespace JobPortal__
 {
@@ -44,7 +45,7 @@ namespace JobPortal__
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Job Portal", Version = "v1" });
             //});
 
-           services.AddSwaggerDocumentation();
+            services.AddSwaggerDocumentation();
             services.AddCors();
 
             services.AddTransient<IEmailSender, EmailSender>();
@@ -90,12 +91,12 @@ namespace JobPortal__
             });
 
 
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
 
-            }
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -126,6 +127,47 @@ namespace JobPortal__
 
 
             app.UseMvc();
+           // CreateRoles(serviceProvider).Wait();
         }
+//        private async Task CreateRoles(IServiceProvider serviceProvider)
+//        {
+//            //adding custom roles
+//            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+//            string[] roleNames = { "Admin", "Company", "JobSeeker" };
+//            IdentityResult roleResult;
+//​
+//            foreach (var roleName in roleNames)
+//            {
+//                //creating the roles and seeding them to the database
+//                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+//                if (!roleExist)
+//                {
+//                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+//                }
+//            }
+//​
+//            //creating a super user who could maintain the web app
+//            var poweruser = new ApplicationUser
+//            {
+//                UserName = Configuration.GetSection("UserSettings")["Email"],
+//                Email = Configuration.GetSection("UserSettings")["Email"]
+//            };
+//​
+//            string UserPassword = Configuration.GetSection("UserSettings")["Password"];
+//            var _user = await UserManager.FindByEmailAsync(Configuration.GetSection("UserSettings")["Email"]);
+//​
+//            if (_user == null)
+//            {
+//                var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
+//                if (createPowerUser.Succeeded)
+//                {
+//                    //here we tie the new user to the "Admin" role 
+//                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+//​
+//                    }
+//            }
+
+//        }
     }
 }

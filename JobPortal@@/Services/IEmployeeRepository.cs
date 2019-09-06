@@ -12,6 +12,7 @@ namespace JobPortal2.Services
         Employee GetEmployee(int employeeId);
         Employee CreateEmployee(Employee employee);
         void UpdateEmployee(Employee employee);
-     
+        bool EmployeeExists(int employeeId);
+
     }
 }

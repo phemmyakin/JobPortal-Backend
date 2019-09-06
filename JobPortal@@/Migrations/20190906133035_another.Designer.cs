@@ -11,9 +11,10 @@ using System;
 namespace JobPortal2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190906133035_another")]
+    partial class another
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,9 +51,6 @@ namespace JobPortal2.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("Role")
-                        .IsRequired();
 
                     b.Property<string>("SecurityStamp");
 
@@ -188,6 +186,54 @@ namespace JobPortal2.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Employers");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.RegisterViewModel", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired();
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("Id");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("Role")
+                        .IsRequired();
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -12,5 +12,7 @@ namespace JobPortal2.Services
         Employer GetEmployer(int employerId);
         Employer CreateEmployer(Employer employer);
         void UpdateEmployer(Employer employer);
+
+        bool EmployerExists(int employerId);
     }
 }

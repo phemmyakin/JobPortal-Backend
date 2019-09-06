@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using JobPortal2.Services;
 
 namespace JobPortal__.Controllers
 {
@@ -25,13 +26,18 @@ namespace JobPortal__.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IEmployerRepository _employerRepository;
+        private readonly ApplicationDbContext _dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, ILogger<AccountController> logger, IEmailSender emailSender, IEmployerRepository employerRepository)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
             _emailSender = emailSender;
+            _employerRepository = employerRepository;
+            _dbContext = dbContext;
+
         }
 
 
@@ -42,25 +48,35 @@ namespace JobPortal__.Controllers
             IdentityResult result = null;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                 result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                try
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Role = model.Role };
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created a new account with password.");
 
-                   // await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return StatusCode(201);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                        await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
+                        // await _signInManager.SignInAsync(user, isPersistent: false);
+                        _logger.LogInformation("User created a new account with password.");
+                        return StatusCode(201);
+
+                    }
+                }
+                catch(ApplicationException ex)
+                {
+                    return BadRequest(new { message = ex.Message });
                 }
             }
+            
 
             // If we got this far, something failed, redisplay form
-            return Ok(result);
+           // ModelState.AddModelError("", "Something went wrong");
+            return BadRequest(ModelState);
         }
 
 
@@ -98,7 +114,7 @@ namespace JobPortal__.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<IActionResult> ForgotPassword(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -149,22 +165,27 @@ namespace JobPortal__.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] JwtTokenViewModel jwtmodel)
+        public async Task<IActionResult> Login([FromBody] LogInViewModel model)
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await _userManager.FindByNameAsync(jwtmodel.Username);
-                var signInResult = await _signInManager.CheckPasswordSignInAsync(user, jwtmodel.Password, false);
+                ApplicationUser user = await _userManager.FindByNameAsync(model.Email);
+                var userRole = user.Role;
+
+                var signInResult = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (signInResult.Succeeded)
                 {
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(MVSToken.Key));
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var claims = new[]
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub, jwtmodel.Username),
+                        new Claim(JwtRegisteredClaimNames.Sub, model.Email),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, jwtmodel.Username),
-                       
+                        new Claim(JwtRegisteredClaimNames.UniqueName, model.Email),
+                        new Claim(ClaimTypes.Role, userRole)
+                    
+                      
+
                     };
 
                     var token = new JwtSecurityToken(
@@ -174,6 +195,7 @@ namespace JobPortal__.Controllers
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: creds
+                        
                         );
 
                     var results = new
@@ -185,6 +207,7 @@ namespace JobPortal__.Controllers
                         user.UserName,
                         user.Id,
                         user.PhoneNumber
+                      
                        
 
                     };

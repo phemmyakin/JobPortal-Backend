@@ -23,6 +23,11 @@ namespace JobPortal2.Services
             return employee;
         }
 
+        public bool EmployeeExists(int employeeId)
+        {
+            return _context.Employees.Any(b => b.EmployeeId == employeeId);
+        }
+
         public Employee GetEmployee(int employeeId)
         {
             return _context.Employees.Where(e => e.EmployeeId == employeeId).FirstOrDefault();
