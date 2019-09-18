@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +12,8 @@ namespace JobPortal2.Model
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
         public string Email { get; set; }
+
+        
     }
 }
