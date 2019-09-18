@@ -51,6 +51,7 @@ namespace JobPortal__
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IEmployerRepository, EmployerRepository>();
+            services.AddTransient<ICompanyRepository, CompanyRepository>();
 
             services.AddMvc();
             services.AddAuthentication(cfg =>

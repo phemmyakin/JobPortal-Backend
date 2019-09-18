@@ -11,8 +11,8 @@ namespace JobPortal__.Services
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
-            return emailSender.SendEmailAsync(email, "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(link)}'>clicking here</a>.");
+            return emailSender.SendEmailAsync(email, "Welcome To Job Portal",
+                $"You have successfully created an account , kindly login by <a href='{HtmlEncoder.Default.Encode(link)}'>clicking here</a>.");
         }
 
         public static Task SendResetPasswordAsync(this IEmailSender emailSender, string email, string callbackUrl)

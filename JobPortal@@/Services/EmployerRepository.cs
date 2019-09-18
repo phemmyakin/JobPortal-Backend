@@ -24,7 +24,7 @@ namespace JobPortal2.Services
 
         public Employer GetEmployer(int employerId)
         {
-           return  _context.Employers.Where(e => e.CompanyId == employerId).FirstOrDefault();
+           return  _context.Employers.Where(e => e.EmployerId == employerId).FirstOrDefault();
             
         }
 
@@ -36,14 +36,14 @@ namespace JobPortal2.Services
         
         public void UpdateEmployer(Employer employer)
         {
-            var user = _context.Employers.Find(employer.CompanyId);
+            var user = _context.Employers.Find(employer.EmployerId);
             
 
             if (user == null)
                 throw new Exception("User not found");
-            user.CompanyName = employer.CompanyName;
-            user.JobTitle = employer.JobTitle;
-            user.JobDescription = employer.JobDescription;
+            user.FirstName = employer.FirstName;
+            user.LastName = employer.LastName;
+            user.Company = employer.Company;
             _context.Employers.Update(user);
             _context.SaveChanges();
 
@@ -51,7 +51,7 @@ namespace JobPortal2.Services
 
         public bool EmployerExists(int employerId)
         {
-            return _context.Employers.Any(b => b.CompanyId== employerId);
+            return _context.Employers.Any(b => b.EmployerId== employerId);
         }
     }
 }

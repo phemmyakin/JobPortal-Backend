@@ -22,10 +22,13 @@ namespace JobPortal__.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+           
         }
 
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Employer> Employers { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
 
+        public virtual DbSet<Job> Jobs { get; set; }
     }
 }

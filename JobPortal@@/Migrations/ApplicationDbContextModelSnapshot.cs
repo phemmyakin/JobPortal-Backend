@@ -74,12 +74,22 @@ namespace JobPortal2.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("JobPortal2.Model.Company", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CompanyName");
+
+                    b.HasKey("CompanyId");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("JobPortal2.Model.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address1");
 
@@ -91,8 +101,6 @@ namespace JobPortal2.Migrations
 
                     b.Property<string>("CV");
 
-                    b.Property<string>("ConcurrencyStamp");
-
                     b.Property<string>("Country");
 
                     b.Property<string>("CurrentJob");
@@ -101,41 +109,19 @@ namespace JobPortal2.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<bool>("EmailConfirmed");
-
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Gender");
 
                     b.Property<string>("HighestQualification");
 
-                    b.Property<string>("Id");
-
                     b.Property<string>("LastName");
 
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
                     b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
 
                     b.Property<string>("State");
 
                     b.Property<string>("Title");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
 
                     b.Property<string>("YearsOfExperience");
 
@@ -146,48 +132,38 @@ namespace JobPortal2.Migrations
 
             modelBuilder.Entity("JobPortal2.Model.Employer", b =>
                 {
-                    b.Property<int>("CompanyId")
+                    b.Property<int>("EmployerId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AccessFailedCount");
+                    b.Property<int?>("CompanyId");
 
-                    b.Property<string>("CompanyName");
+                    b.Property<string>("FirstName");
 
-                    b.Property<string>("ConcurrencyStamp");
+                    b.Property<string>("LastName");
 
-                    b.Property<string>("Email");
+                    b.HasKey("EmployerId");
 
-                    b.Property<bool>("EmailConfirmed");
+                    b.HasIndex("CompanyId");
 
-                    b.Property<string>("Id");
+                    b.ToTable("Employers");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.Job", b =>
+                {
+                    b.Property<int>("JobId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CompanyId");
 
                     b.Property<string>("JobDescription");
 
                     b.Property<string>("JobTitle");
 
-                    b.Property<bool>("LockoutEnabled");
+                    b.HasKey("JobId");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd");
+                    b.HasIndex("CompanyId");
 
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("CompanyId");
-
-                    b.ToTable("Employers");
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -296,6 +272,20 @@ namespace JobPortal2.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.Employer", b =>
+                {
+                    b.HasOne("JobPortal2.Model.Company", "Company")
+                        .WithMany("Employers")
+                        .HasForeignKey("CompanyId");
+                });
+
+            modelBuilder.Entity("JobPortal2.Model.Job", b =>
+                {
+                    b.HasOne("JobPortal2.Model.Company", "Company")
+                        .WithMany("Jobs")
+                        .HasForeignKey("CompanyId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

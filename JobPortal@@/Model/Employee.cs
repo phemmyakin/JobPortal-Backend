@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal2.Model
 {
-    public class Employee : IdentityUser
+    public class Employee 
     {
          [Key]
         public int EmployeeId { get; set; }
@@ -44,5 +44,7 @@ namespace JobPortal2.Model
 
         public string Avalability { get; set; }
         public string CV { get; set; }
+
+      //6246980
     }
 }

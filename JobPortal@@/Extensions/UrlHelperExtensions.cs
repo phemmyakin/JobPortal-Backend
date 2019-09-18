@@ -26,8 +26,8 @@ namespace Microsoft.AspNetCore.Mvc
             //    values: new { userId, code },
             //    protocol: scheme);
              return urlHelper.Action(
-                action: nameof(AccountController.Login),
-                controller: "Account",
+                action: nameof(UserController.Login),
+                controller: "User",
                 values: new { userId, code },
                 protocol: scheme);
         }
