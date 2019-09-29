@@ -1,4 +1,8 @@
-﻿using System;
+﻿<<<<<<< .mine
+using System;
+using System.Collections.Generic;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,3 +21,4 @@ namespace JobPortal2.Model
        public virtual ICollection<Job> Jobs { get; set; }
     }
 }
+
