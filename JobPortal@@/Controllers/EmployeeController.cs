@@ -14,10 +14,12 @@ namespace JobPortal2.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly ICompanyRepository _companyRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, ICompanyRepository companyRepository)
         {
             _employeeRepository = employeeRepository;
+            _companyRepository = companyRepository;
         }
 
         [Authorize(Roles = "Admin, JobSeeker")]
@@ -60,6 +62,19 @@ namespace JobPortal2.Controllers
                 return NoContent();
           
         }
+
+
+        [Authorize(Roles = "Admin, JobSeeker")]
+        [HttpGet("(Jobs)")]
+        public IActionResult GetJobs()
+        {
+            var jobs = _companyRepository.GetJobs();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(jobs);
+        }
+
+
 
         [Authorize(Roles = "Admin, JobSeeker")]
         [HttpPost]

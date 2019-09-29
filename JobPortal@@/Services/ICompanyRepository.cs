@@ -8,8 +8,11 @@ namespace JobPortal2.Services
 {
     public interface ICompanyRepository
     {
-        bool CompanyExist(int CompanyId);
-        bool CompanyExist(string CompanyName);
+        bool CompanyExist(int companyId);
+        bool CompanyExist(string companyName);
         ICollection<Company> GetCompanies();
+
+        ICollection<Job> GetJobs();
+        Company CompanyDetails(int companyId);
     }
 }

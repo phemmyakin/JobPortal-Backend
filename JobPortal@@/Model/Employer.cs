@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JobPortal__.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,8 +15,12 @@ namespace JobPortal2.Model
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EmployerId { get; set; }
-        public string FirstName {get; set;}
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
         public string LastName { get; set; }
-        public Company Company { get; set; }
+        //public int CompanyId { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

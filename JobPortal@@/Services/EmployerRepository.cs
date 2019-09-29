@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JobPortal__.Data;
 using JobPortal2.Model;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace JobPortal2.Services
 {
@@ -31,6 +32,14 @@ namespace JobPortal2.Services
         public IEnumerable<Employer> GetEmployers()
         {
             return _context.Employers.ToList();
+            
+            //return _context.Users.Where(c => c.Role == 3).Select(c => new Employer
+            //{
+            //       FirstName =
+            //        LastName = c.LastName
+            //});
+            
+            
         }
 
         
@@ -41,9 +50,8 @@ namespace JobPortal2.Services
 
             if (user == null)
                 throw new Exception("User not found");
-            user.FirstName = employer.FirstName;
-            user.LastName = employer.LastName;
-            user.Company = employer.Company;
+           
+            //user.Company = employer.Company;
             _context.Employers.Update(user);
             _context.SaveChanges();
 
@@ -52,6 +60,12 @@ namespace JobPortal2.Services
         public bool EmployerExists(int employerId)
         {
             return _context.Employers.Any(b => b.EmployerId== employerId);
+        }
+
+        public ICollection<Employer> GetEmployersOfACompany(int companyId)
+        {
+          
+            return _context.Employers.Where(c => c.Company.CompanyId == companyId).ToList();
         }
     }
 }

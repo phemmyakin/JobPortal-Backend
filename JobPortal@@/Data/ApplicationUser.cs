@@ -14,5 +14,10 @@ namespace JobPortal__.Data
     {
         [Required]
         public string Role { get; set; }
+
+       
+        public Employer Employer{ get; set; }
+        public Employee Employee { get; set; }
+        
     }
 }

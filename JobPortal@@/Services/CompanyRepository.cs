@@ -15,6 +15,12 @@ namespace JobPortal2.Services
         {
             _context = context;
         }
+
+        public Company CompanyDetails(int companyId)
+        {
+            return _context.Companies.Where(c => c.CompanyId == companyId).FirstOrDefault();
+        }
+
         public bool CompanyExist(int companyId)
         {
             return _context.Companies.Any(c => c.CompanyId == companyId);
@@ -28,6 +34,11 @@ namespace JobPortal2.Services
         public ICollection<Company> GetCompanies()
         {
             return _context.Companies.OrderBy(c => c.CompanyName).ToList();
+        }
+
+        public ICollection<Job> GetJobs()
+        {
+            return _context.Jobs.OrderBy(c => c.JobTitle).ToList();
         }
     }
 }

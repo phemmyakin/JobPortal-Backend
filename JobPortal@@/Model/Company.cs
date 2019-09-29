@@ -10,13 +10,10 @@ namespace JobPortal2.Model
     public class Company
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }
-       
-        public virtual ICollection<Employer> Employers { get; set; }
-
-        public virtual ICollection<Job> Jobs { get; set; }
+       public virtual ICollection<Employer> Employers{ get; set; }
+       public virtual ICollection<Job> Jobs { get; set; }
     }
 }

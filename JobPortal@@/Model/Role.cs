@@ -14,6 +14,7 @@ namespace JobPortal2.Model
         public const string Admin = "Admin";
         public const string Company = "Company";
         public const string JobSeeker = "JobSeeker";
+        public const string Employer = "Employer";
     }
 
 

@@ -15,6 +15,7 @@ namespace JobPortal2.Model
         public string JobTitle { get; set; }
         public string JobDescription { get; set; }
 
+        //public int CompanyId { get; set; }
         public Company Company { get; set; }
     }
 }

@@ -25,16 +25,13 @@ namespace JobPortal__.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IEmployerRepository _employerRepository;
-        private readonly ApplicationDbContext _dbContext;
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,  ILogger<UserController> logger, IEmailSender emailSender, IEmployerRepository employerRepository)
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,  ILogger<UserController> logger, IEmailSender emailSender)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
             _emailSender = emailSender;
-            _employerRepository = employerRepository;
             
 
         }
@@ -49,7 +46,7 @@ namespace JobPortal__.Controllers
             {
                 try
                 {
-                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Role = model.Role };
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email,Role = model.Role };
 
                     result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
@@ -113,7 +110,7 @@ namespace JobPortal__.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(RegisterViewModel model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -181,7 +178,7 @@ namespace JobPortal__.Controllers
                         new Claim(JwtRegisteredClaimNames.Sub, model.Email),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.UniqueName, model.Email),
-                        new Claim(ClaimTypes.Role, userRole)
+                        new Claim(ClaimTypes.Role, userRole.ToString())
                     
                       
 

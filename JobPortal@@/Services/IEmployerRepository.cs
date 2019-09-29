@@ -9,6 +9,7 @@ namespace JobPortal2.Services
     public interface IEmployerRepository
     {
         IEnumerable<Employer> GetEmployers();
+        ICollection<Employer> GetEmployersOfACompany(int companyId);
         Employer GetEmployer(int employerId);
         Employer CreateEmployer(Employer employer);
         void UpdateEmployer(Employer employer);

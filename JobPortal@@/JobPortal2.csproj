@@ -8,6 +8,8 @@
     <Compile Remove="Data\Migrations\20190816094334_first.Designer.cs" />
     <Compile Remove="Data\Migrations\20190819175911_second.cs" />
     <Compile Remove="Data\Migrations\20190819175911_second.Designer.cs" />
+    <Compile Remove="Migrations\20190921141938_newOne.cs" />
+    <Compile Remove="Migrations\20190921141938_newOne.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
